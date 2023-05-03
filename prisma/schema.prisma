@@ -16,7 +16,7 @@ model User {
 
   email     String    @unique
   username  String    @unique
-  picture   String
+  picture   String    @default("https://i.pravatar.cc/300")
   password  String
 
   products  Product[]
