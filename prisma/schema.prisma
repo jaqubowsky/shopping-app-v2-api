@@ -9,3 +9,29 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+
+  email     String    @unique
+  username  String    @unique
+  picture   String
+  password  String
+
+  products  Product[]
+}
+
+model Product {
+  id          String   @id @default(uuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  name        String   @db.VarChar(255)
+  description String
+  price       Int
+  picture     String
+
+  belongsToId String
+  belongsTo   User     @relation(fields: [belongsToId], references: [id])
+}
