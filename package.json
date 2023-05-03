@@ -1,0 +1,27 @@
+{
+  "name": "shopping-app-backend",
+  "version": "1.0.0",
+  "description": "Backend for shopping app",
+  "main": "index.ts",
+  "scripts": {
+    "start": "ts-node src/index.ts",
+    "dev": "nodemon src/index.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "^4.13.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-validator": "^7.0.1"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.13",
+    "@types/express": "^4.17.17",
+    "@types/node": "^18.16.3",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.22",
+    "prisma": "^4.13.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.4"
+  }
+}

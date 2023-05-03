@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "sourceMap": true,
+    "outDir": "dist",
+    "target": "es5",
+    "lib": ["esnext"],
+    "esModuleInterop": true
+  },
+
+  "include": ["src/**/*.ts"]
+}
