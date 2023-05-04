@@ -1,7 +1,11 @@
+import {
+  PrismaClientKnownRequestError,
+  PrismaClientValidationError,
+} from "@prisma/client/runtime/library";
 import prisma from "../db";
 import { comparePasswords, createJWT, hashPassword } from "../modules/auth";
 
-export const createNewUser = async (req, res) => {
+export const createNewUser = async (req, res, next) => {
   try {
     const user = await prisma.user.create({
       data: {
@@ -13,14 +17,20 @@ export const createNewUser = async (req, res) => {
 
     const token = createJWT(user);
     res.json({ token });
-  } catch (error) {
-    res
-      .status(400)
-      .json({ message: "Authentication error" });
+  } catch (err) {
+    if (err instanceof PrismaClientKnownRequestError) {
+      if (err.code === "P2002") {
+        return res.status(409).json({ message: "Username or email already exists." });
+      }
+    } else if (err instanceof PrismaClientValidationError) {
+      return res.status(400).json({ message: "Some fields are missing." });
+    } else {
+      next(err);
+    }
   }
 };
 
-export const signIn = async (req, res) => {
+export const signIn = async (req, res, next) => {
   try {
     const user = await prisma.user.findUnique({
       where: {
@@ -32,12 +42,13 @@ export const signIn = async (req, res) => {
     const isValid = await comparePasswords(req.body.password, user.password);
 
     if (!isValid) {
-      return res.status(401).json({ message: "Invalid password" });
+      return res.status(401).json({ message: "Wrong password!" });
     }
 
     const token = createJWT(user);
     res.json({ token });
-  } catch (error) {
-    res.status(400).json({ message: "Invalid username or email" });
+  } catch (err) {
+    err.type = "auth";
+    next(err);
   }
 };
