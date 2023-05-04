@@ -4,6 +4,7 @@
   "description": "Backend for shopping app",
   "main": "index.ts",
   "scripts": {
+    "build": "tsc -p tsconfig.json",
     "start": "ts-node src/index.ts",
     "dev": "nodemon src/index.ts"
   },
