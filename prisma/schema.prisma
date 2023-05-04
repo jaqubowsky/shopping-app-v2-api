@@ -28,10 +28,11 @@ model Product {
   updatedAt   DateTime @updatedAt
 
   name        String   @db.VarChar(255)
-  description String
+  description String?
   price       Int
   picture     String
 
   belongsToId String
   belongsTo   User     @relation(fields: [belongsToId], references: [id])
+  @@unique([id, belongsToId])
 }
