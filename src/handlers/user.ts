@@ -4,6 +4,7 @@ import {
 } from "@prisma/client/runtime/library";
 import prisma from "../db";
 import { comparePasswords, createJWT, hashPassword } from "../modules/auth";
+import jwt from "jsonwebtoken";
 
 export const createNewUser = async (req, res, next) => {
   try {
@@ -20,7 +21,9 @@ export const createNewUser = async (req, res, next) => {
   } catch (err) {
     if (err instanceof PrismaClientKnownRequestError) {
       if (err.code === "P2002") {
-        return res.status(409).json({ message: "Username or email already exists." });
+        return res
+          .status(409)
+          .json({ message: "Username or email already exists." });
       }
     } else if (err instanceof PrismaClientValidationError) {
       return res.status(400).json({ message: "Some fields are missing." });
@@ -45,8 +48,12 @@ export const signIn = async (req, res, next) => {
       return res.status(401).json({ message: "Wrong password!" });
     }
 
-    const token = createJWT(user);
-    res.json({ token });
+    const token = jwt.sign(
+      { id: user.id, username: user.username, email: user.email },
+      process.env.JWT_SECRET
+    );
+
+    res.json({ message: `Welcome ${user.username}!`, token });
   } catch (err) {
     err.type = "auth";
     next(err);
