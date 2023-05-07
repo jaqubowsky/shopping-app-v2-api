@@ -67,6 +67,29 @@ export const signIn = async (req, res, next) => {
   }
 };
 
+export const loggedIn = async (req, res, next) => {
+  try {
+    const bearer = req.cookies.token;
+
+    if (!bearer || !bearer.startsWith("Bearer ")) {
+      return res.status(401).send({ message: "Not authorized" });
+    }
+
+    const [, token] = bearer.split(" ");
+
+    if (!token) {
+      return res.status(401).send({ message: "Not authorized" });
+    }
+
+    const user = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = user;
+    next();
+  } catch (err) {
+    res.clearCookie("token");
+    return res.status(401).send({ message: "Not authorized" });
+  }
+};
+
 export const logout = async (req, res, next) => {
   try {
     res.clearCookie("token").status(200).json({ message: "Logged out" });

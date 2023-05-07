@@ -4,7 +4,7 @@ import router from "./router";
 import cors from "cors";
 import { protect } from "./modules/auth";
 import cookieParser from "cookie-parser";
-import { createNewUser, logout, signIn } from "./handlers/user";
+import { createNewUser, loggedIn, logout, signIn } from "./handlers/user";
 
 const app = express();
 
@@ -19,6 +19,7 @@ app.use("/api", protect, router);
 app.post("/register", createNewUser);
 app.post("/login", signIn);
 app.get("/logout", logout);
+app.get("/logged-in", loggedIn)
 
 app.use((err, req, res, next) => {
   if (err.type === "auth") {
