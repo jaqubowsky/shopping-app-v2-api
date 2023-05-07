@@ -20,7 +20,11 @@ export const createNewUser = async (req, res, next) => {
     res
       .cookie("registerToken", token, { httpOnly: true, maxAge: 86400000 })
       .status(200)
-      .json({ username: user.username });
+      .json({
+        username: user.username,
+        email: user.email,
+        picture: user.picture,
+      });
   } catch (err) {
     if (err instanceof PrismaClientKnownRequestError) {
       if (err.code === "P2002") {
@@ -60,7 +64,11 @@ export const signIn = async (req, res, next) => {
     res
       .cookie("token", token, { httpOnly: true, maxAge: 86400000 })
       .status(200)
-      .json({ username: user.username });
+      .json({
+        username: user.username,
+        email: user.email,
+        picture: user.picture,
+      });
   } catch (err) {
     err.type = "auth";
     next(err);
@@ -84,13 +92,11 @@ export const loggedIn = async (req, res, next) => {
     const user = jwt.verify(token, process.env.JWT_SECRET);
     req.user = user;
 
-    res
-      .status(200)
-      .json({
-        username: user.username,
-        email: user.email,
-        picture: user.picture,
-      });
+    res.status(200).json({
+      username: user.username,
+      email: user.email,
+      picture: user.picture,
+    });
     next();
   } catch (err) {
     res.clearCookie("token");
