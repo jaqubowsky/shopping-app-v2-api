@@ -69,6 +69,7 @@ export const signIn = async (req, res, next) => {
         email: user.email,
         picture: user.picture,
       });
+      
   } catch (err) {
     err.type = "auth";
     next(err);
