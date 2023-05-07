@@ -17,7 +17,10 @@ export const createNewUser = async (req, res, next) => {
     });
 
     const token = createJWT(user);
-    res.json({ token });
+    res
+      .cookie("registerToken", token, { httpOnly: true, maxAge: 86400000 })
+      .status(200)
+      .json({ username: user.username });
   } catch (err) {
     if (err instanceof PrismaClientKnownRequestError) {
       if (err.code === "P2002") {
@@ -50,12 +53,24 @@ export const signIn = async (req, res, next) => {
 
     const token = jwt.sign(
       { id: user.id, username: user.username, email: user.email },
-      process.env.JWT_SECRET
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
     );
 
-    res.json({ message: `Welcome ${user.username}!`, token });
+    res
+      .cookie("token", token, { httpOnly: true, maxAge: 86400000 })
+      .status(200)
+      .json({ username: user.username });
   } catch (err) {
     err.type = "auth";
+    next(err);
+  }
+};
+
+export const logout = async (req, res, next) => {
+  try {
+    res.clearCookie("token").status(200).json({ message: "Logged out" });
+  } catch (err) {
     next(err);
   }
 };

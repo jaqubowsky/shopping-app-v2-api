@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { body } from "express-validator";
-import { handleInputErrors } from "./modules/middleware";
+import { handleInputErrors } from "./middlewares/handleInputMiddleware";
 import {
   createProduct,
   deleteProduct,

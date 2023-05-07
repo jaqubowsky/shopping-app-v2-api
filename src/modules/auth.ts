@@ -11,14 +11,14 @@ export const hashPassword = (password) => {
 
 export const createJWT = (user) => {
   const token = jwt.sign(
-    { id: user.id, usernameOrEmail:  user.username | user.email },
+    { id: user.id, usernameOrEmail: user.username | user.email },
     process.env.JWT_SECRET
   );
   return token;
 };
 
 export const protect = (req, res, next) => {
-  const bearer = req.headers.authorization;
+  const bearer = req.cookie.token;
 
   if (!bearer || !bearer.startsWith("Bearer ")) {
     return res.status(401).send({ message: "Not authorized" });
@@ -35,6 +35,7 @@ export const protect = (req, res, next) => {
     req.user = user;
     next();
   } catch (error) {
+    res.clearCookie("token");
     return res.status(401).send({ message: "Not authorized" });
   }
 };
