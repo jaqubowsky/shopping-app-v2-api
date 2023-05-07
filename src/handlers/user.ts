@@ -83,6 +83,14 @@ export const loggedIn = async (req, res, next) => {
 
     const user = jwt.verify(token, process.env.JWT_SECRET);
     req.user = user;
+
+    res
+      .status(200)
+      .json({
+        username: user.username,
+        email: user.email,
+        picture: user.picture,
+      });
     next();
   } catch (err) {
     res.clearCookie("token");
