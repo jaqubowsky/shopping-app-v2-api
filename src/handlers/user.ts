@@ -80,13 +80,13 @@ export const loggedIn = async (req, res, next) => {
     const bearer = req.cookies.token;
 
     if (!bearer || !bearer.startsWith("Bearer ")) {
-      return res.status(401).send({ message: "Not authorized" });
+      return res.status(401).send({ message: "Not valid token" });
     }
 
     const [, token] = bearer.split(" ");
 
     if (!token) {
-      return res.status(401).send({ message: "Not authorized" });
+      return res.status(200).send({ user: null });
     }
 
     const user = jwt.verify(token, process.env.JWT_SECRET);
