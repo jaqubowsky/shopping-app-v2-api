@@ -2,3 +2,4 @@ node_modules
 # Keep environment variables out of version control
 .env
 dist
+shopping-app-v2-386019-f8e65e2749e9.json
