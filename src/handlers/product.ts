@@ -87,7 +87,7 @@ export const createProduct = async (req, res, next) => {
         description,
         price,
         imageUrl: publicUrl,
-        createdBy: req.user.name,
+        createdBy: req.user.username,
         belongsTo: {
           connect: {
             id: req.user.id,
