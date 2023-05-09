@@ -18,13 +18,7 @@ export const createJWT = (user) => {
 };
 
 export const protect = (req, res, next) => {
-  const bearer = req.cookie.token;
-
-  if (!bearer || !bearer.startsWith("Bearer ")) {
-    return res.status(401).send({ message: "Not authorized" });
-  }
-
-  const [, token] = bearer.split(" ");
+  const token = req.cookies.token;
 
   if (!token) {
     return res.status(401).send({ message: "Not authorized" });
