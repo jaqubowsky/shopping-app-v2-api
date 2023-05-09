@@ -11,28 +11,29 @@ datasource db {
 }
 
 model User {
-  id        String    @id @default(uuid())
-  createdAt DateTime  @default(now())
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
 
-  email     String    @unique
-  username  String    @unique
-  picture   String    @default("https://i.pravatar.cc/300")
-  password  String
+  email    String @unique
+  username String @unique
+  imageUrl String @default("https://i.pravatar.cc/300")
+  password String
 
-  products  Product[]
+  products Product[]
 }
 
 model Product {
-  id          String   @id @default(uuid())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  name        String   @db.VarChar(255)
+  name        String  @db.VarChar(255)
   description String?
   price       Int
-  picture     String
+  imageUrl    String  
 
   belongsToId String
-  belongsTo   User     @relation(fields: [belongsToId], references: [id])
+  belongsTo   User   @relation(fields: [belongsToId], references: [id])
+
   @@unique([id, belongsToId])
 }
