@@ -25,12 +25,13 @@ model User {
 model Product {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now())
+  createdBy String   @default("anonymous")
   updatedAt DateTime @updatedAt
 
   name        String  @db.VarChar(255)
   description String?
   price       Int
-  imageUrl    String  
+  imageUrl    String
 
   belongsToId String
   belongsTo   User   @relation(fields: [belongsToId], references: [id])
