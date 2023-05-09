@@ -1,11 +1,11 @@
-import prisma from "../db";
+import prisma, { bucket } from "../db";
 
 // Get all products from database
 export const getAllProducts = async (req, res, next) => {
   try {
     const products = await prisma.product.findMany();
 
-    res.json({ data: products });
+    res.json({ products });
   } catch (err) {
     next(err);
   }
@@ -23,7 +23,9 @@ export const getUserProducts = async (req, res, next) => {
       },
     });
 
-    res.json({ data: user.products });
+    const products = user.products;
+
+    res.json({ products });
   } catch (err) {
     next(err);
   }
@@ -45,7 +47,7 @@ export const getProduct = async (req, res, next) => {
       return res.status(404).json({ error: "Product not found" });
     }
 
-    res.json({ data: product });
+    res.json({ product });
   } catch (err) {
     next(err);
   }
@@ -54,19 +56,46 @@ export const getProduct = async (req, res, next) => {
 // Create a new product
 export const createProduct = async (req, res, next) => {
   try {
-    const { name, description, price, picture } = req.body;
+    const { name, description } = req.body;
+    const price = Number(req.body.price);
+    const file = req.file;
+
+    let publicUrlPromise;
+    const filename = `${file.originalname}-${Date.now()}`;
+
+    if (file) {
+      const blob = bucket.file(filename);
+
+      const blobStream = blob.createWriteStream({
+        resumable: false,
+      });
+
+      publicUrlPromise = new Promise((resolve, reject) => {
+        blobStream.on("finish", () => {
+          const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
+          resolve(publicUrl);
+        });
+        blobStream.end(file.buffer);
+      });
+    }
+
+    const publicUrl = await publicUrlPromise;
 
     const product = await prisma.product.create({
       data: {
         name,
         description,
         price,
-        picture,
-        belongsToId: req.user.id,
+        imageUrl: publicUrl,
+        belongsTo: {
+          connect: {
+            id: req.user.id,
+          },
+        },
       },
     });
 
-    res.json({ data: product });
+    res.json({ product });
   } catch (err) {
     next(err);
   }
@@ -76,7 +105,7 @@ export const createProduct = async (req, res, next) => {
 export const updateProduct = async (req, res, next) => {
   try {
     const id = req.params.id;
-    const { name, description, price, picture } = req.body;
+    const { name, description, price, imageUrl } = req.body;
 
     const updated = await prisma.product.update({
       where: {
@@ -89,11 +118,11 @@ export const updateProduct = async (req, res, next) => {
         name,
         description,
         price,
-        picture,
+        imageUrl,
       },
     });
 
-    res.json({ data: updated });
+    res.json({ updated });
   } catch (err) {
     next(err);
   }
@@ -113,8 +142,13 @@ export const deleteProduct = async (req, res, next) => {
       },
     });
 
-    res.json({ data: deleted });
+    res.json({ deleted });
   } catch (err) {
     next(err);
   }
+};
+
+export const uploadImage = async (req, res, next) => {
+  console.log(req.file);
+  res.status(200).json({ message: "File uploaded successfully" });
 };

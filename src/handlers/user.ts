@@ -18,12 +18,12 @@ export const createNewUser = async (req, res, next) => {
 
     const token = createJWT(user);
     res
-      .cookie("registerToken", token, { httpOnly: true, maxAge: 86400000 })
+      .cookie("token", token, { httpOnly: true, maxAge: 86400000 })
       .status(200)
       .json({
         username: user.username,
         email: user.email,
-        picture: user.picture,
+        imageUrl: user.imageUrl,
       });
   } catch (err) {
     if (err instanceof PrismaClientKnownRequestError) {
@@ -67,9 +67,8 @@ export const signIn = async (req, res, next) => {
       .json({
         username: user.username,
         email: user.email,
-        picture: user.picture,
+        imageUrl: user.imageUrl,
       });
-      
   } catch (err) {
     err.type = "auth";
     next(err);
@@ -78,16 +77,10 @@ export const signIn = async (req, res, next) => {
 
 export const loggedIn = async (req, res, next) => {
   try {
-    const bearer = req.cookies.token;
-
-    if (!bearer || !bearer.startsWith("Bearer ")) {
-      return res.status(401).send({ message: "Not valid token" });
-    }
-
-    const [, token] = bearer.split(" ");
+    const token = req.cookies.token;
 
     if (!token) {
-      return res.status(200).send({ user: null });
+      return res.status(401).send({ user: null });
     }
 
     const user = jwt.verify(token, process.env.JWT_SECRET);
@@ -96,8 +89,9 @@ export const loggedIn = async (req, res, next) => {
     res.status(200).json({
       username: user.username,
       email: user.email,
-      picture: user.picture,
+      imageUrl: user.imageUrl,
     });
+    
     next();
   } catch (err) {
     res.clearCookie("token");

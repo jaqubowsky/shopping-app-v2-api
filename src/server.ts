@@ -11,13 +11,13 @@ const app = express();
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "*",
+    origin: "http://localhost:5173",
     credentials: true,
   })
 );
 app.use(morgan("dev"));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 
 app.use("/api", protect, router);
 
