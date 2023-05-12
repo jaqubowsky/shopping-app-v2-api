@@ -1,10 +1,9 @@
 import { Router } from "express";
-import { body, check } from "express-validator";
+import { body } from "express-validator";
 import { handleInputErrors } from "./middlewares/handleInputMiddleware";
 import {
   createProduct,
   deleteProduct,
-  getAllProducts,
   getProduct,
   getUserProducts,
   updateProduct,
@@ -26,9 +25,7 @@ const upload = Multer({
 
 const router = Router();
 
-router.get("/allproducts", getAllProducts);
-
-router.get("/product", getUserProducts);
+router.get("/products", getUserProducts);
 
 router.get("/product/:id", getProduct);
 
@@ -46,6 +43,7 @@ router.post(
   upload.single("image"),
   body("name").exists().isString(),
   body("description").isString().optional(),
+  body("category").exists().isString(),
   body("price").exists().isNumeric(),
   handleInputErrors,
   createProduct
