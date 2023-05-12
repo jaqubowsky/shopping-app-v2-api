@@ -30,6 +30,7 @@ model Product {
 
   name        String  @db.VarChar(255)
   description String?
+  category    String  @default("unknown") @db.VarChar(255)
   price       Int
   imageUrl    String
 
