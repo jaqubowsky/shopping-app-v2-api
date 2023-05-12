@@ -44,7 +44,6 @@ export const signIn = async (req, res, next) => {
   try {
     const user = await prisma.user.findUnique({
       where: {
-        username: req.body.username,
         email: req.body.email,
       },
     });
@@ -70,8 +69,7 @@ export const signIn = async (req, res, next) => {
         imageUrl: user.imageUrl,
       });
   } catch (err) {
-    err.type = "auth";
-    next(err);
+    return res.status(401).send({ message: "User do not exist!" });
   }
 };
 
@@ -80,28 +78,45 @@ export const loggedIn = async (req, res, next) => {
     const token = req.cookies.token;
 
     if (!token) {
-      return res.status(401).send({ user: null });
+      return res.status(200).send({ user: null, message: "Not authorized." });
     }
 
     const user = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = user;
 
-    res.status(200).json({
-      username: user.username,
-      email: user.email,
-      imageUrl: user.imageUrl,
-    });
-    
+    if (user) {
+      const prismaUser = await prisma.user.findUnique({
+        where: {
+          id: user.id,
+        },
+      });
+
+      req.user = prismaUser;
+
+      res.status(200).json({
+        user: {
+          username: req.user.username,
+          email: req.user.email,
+          createdAt: req.user.createdAt,
+          imageUrl: req.user.imageUrl,
+        },
+        message: "Authorized.",
+      });
+    } else {
+      res.status(200).send({ user: null, message: "Not authorized." });
+    }
+
     next();
   } catch (err) {
-    res.clearCookie("token");
-    return res.status(401).send({ message: "Not authorized" });
+    return res.status(401).send({ user: null, message: "Unexpected error" });
   }
 };
 
 export const logout = async (req, res, next) => {
   try {
-    res.clearCookie("token").status(200).json({ message: "Logged out" });
+    res
+      .clearCookie("token")
+      .status(200)
+      .json({ message: "Logged out successfully." });
   } catch (err) {
     next(err);
   }
