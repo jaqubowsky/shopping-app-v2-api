@@ -56,7 +56,7 @@ export const getProduct = async (req, res, next) => {
 // Create a new product
 export const createProduct = async (req, res, next) => {
   try {
-    const { name, description } = req.body;
+    const { name, description, category } = req.body;
     const price = Number(req.body.price);
     const file = req.file;
 
@@ -86,8 +86,10 @@ export const createProduct = async (req, res, next) => {
         name,
         description,
         price,
+        category,
         imageUrl: publicUrl,
         createdBy: req.user.username,
+        createdAt: new Date(),
         belongsTo: {
           connect: {
             id: req.user.id,
