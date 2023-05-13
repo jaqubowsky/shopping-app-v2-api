@@ -98,7 +98,7 @@ export const createProduct = async (req, res, next) => {
       },
     });
 
-    res.json({ product });
+    res.status(201).json({ product });
   } catch (err) {
     next(err);
   }
