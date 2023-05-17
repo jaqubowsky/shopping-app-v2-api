@@ -8,8 +8,14 @@ import jwt from "jsonwebtoken";
 
 export const createNewUser = async (req, res, next) => {
   try {
+    const number = parseInt(req.body.phoneNumber);
+
     const user = await prisma.user.create({
       data: {
+        name: req.body.name,
+        surname: req.body.surname,
+        location: req.body.location,
+        phoneNumber: number,
         username: req.body.username,
         email: req.body.email,
         password: await hashPassword(req.body.password),
@@ -17,14 +23,11 @@ export const createNewUser = async (req, res, next) => {
     });
 
     const token = createJWT(user);
+
     res
       .cookie("token", token, { httpOnly: true, maxAge: 86400000 })
       .status(200)
-      .json({
-        username: user.username,
-        email: user.email,
-        imageUrl: user.imageUrl,
-      });
+      .json({ message: "User created successfully." });
   } catch (err) {
     if (err instanceof PrismaClientKnownRequestError) {
       if (err.code === "P2002") {
@@ -94,7 +97,11 @@ export const loggedIn = async (req, res, next) => {
 
       res.status(200).json({
         user: {
+          name: req.user.name,
           username: req.user.username,
+          location: req.user.location,
+          phoneNumber: req.user.phoneNumber,
+
           email: req.user.email,
           createdAt: req.user.createdAt,
           imageUrl: req.user.imageUrl,
@@ -108,6 +115,30 @@ export const loggedIn = async (req, res, next) => {
     next();
   } catch (err) {
     return res.status(401).send({ user: null, message: "Unexpected error" });
+  }
+};
+
+export const getUserById = async (req, res) => {
+  try {
+    const prismaUser = await prisma.user.findUnique({
+      where: {
+        id: req.params.id,
+      },
+    });
+
+    req.user = prismaUser;
+
+    res.status(200).json({
+      user: {
+        username: req.user.username,
+        name: req.user.name,
+        phoneNumber: req.user.phoneNumber,
+        email: req.user.email,
+        imageUrl: req.user.imageUrl,
+      },
+    });
+  } catch (err) {
+    return res.status(404).json({ message: "User not found." });
   }
 };
 
