@@ -39,7 +39,6 @@ export const getProduct = async (req, res, next) => {
     const product = await prisma.product.findFirst({
       where: {
         id,
-        belongsToId: req.user.id,
       },
     });
 
@@ -56,8 +55,9 @@ export const getProduct = async (req, res, next) => {
 // Create a new product
 export const createProduct = async (req, res, next) => {
   try {
-    const { name, description, category } = req.body;
+    const { name, description, category, location, email } = req.body;
     const price = Number(req.body.price);
+    const phoneNumber = Number(req.body.phoneNumber);
     const file = req.file;
 
     let publicUrlPromise;
@@ -87,6 +87,9 @@ export const createProduct = async (req, res, next) => {
         description,
         price,
         category,
+        location,
+        phoneNumber,
+        email,
         imageUrl: publicUrl,
         createdBy: req.user.username,
         createdAt: new Date(),
