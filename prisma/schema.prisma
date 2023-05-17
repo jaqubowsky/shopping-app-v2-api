@@ -14,9 +14,14 @@ model User {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now())
 
+  name        String
+  surname     String
+  location    String
+  phoneNumber Int
+
   email    String @unique
   username String @unique
-  imageUrl String @default("https://i.pravatar.cc/300")
+  imageUrl String @default("https://cdn.icon-icons.com/icons2/1371/PNG/512/batman_90804.png")
   password String
 
   products Product[]
@@ -33,6 +38,10 @@ model Product {
   category    String  @default("unknown") @db.VarChar(255)
   price       Int
   imageUrl    String
+
+  location    String  
+  phoneNumber Int 
+  email       String 
 
   belongsToId String
   belongsTo   User   @relation(fields: [belongsToId], references: [id])
