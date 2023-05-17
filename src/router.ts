@@ -4,7 +4,6 @@ import { handleInputErrors } from "./middlewares/handleInputMiddleware";
 import {
   createProduct,
   deleteProduct,
-  getProduct,
   getUserProducts,
   updateProduct,
 } from "./handlers/product";
@@ -26,8 +25,6 @@ const upload = Multer({
 const router = Router();
 
 router.get("/products", getUserProducts);
-
-router.get("/product/:id", getProduct);
 
 router.put(
   "/product/:id",
