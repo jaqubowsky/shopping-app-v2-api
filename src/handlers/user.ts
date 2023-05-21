@@ -72,7 +72,7 @@ export const signIn = async (req, res, next) => {
         imageUrl: user.imageUrl,
       });
   } catch (err) {
-    return res.status(401).send({ message: "User do not exist!" });
+    return res.status(401).send({ message: "User with this email do not exist!" });
   }
 };
 
