@@ -43,7 +43,7 @@ export const getProduct = async (req, res, next) => {
     });
 
     if (!product) {
-      return res.status(404).json({ error: "Product not found" });
+      return res.status(404).json({ message: "Product not found" });
     }
 
     res.json({ product });
