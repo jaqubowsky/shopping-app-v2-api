@@ -54,7 +54,7 @@ export const signIn = async (req, res, next) => {
     const isValid = await comparePasswords(req.body.password, user.password);
 
     if (!isValid) {
-      return res.status(401).json({ message: "Wrong password!" });
+      return res.status(401).json({ message: "Wrong email or password!" });
     }
 
     const token = jwt.sign(
