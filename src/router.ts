@@ -15,7 +15,7 @@ const upload = Multer({
     fileSize: 5 * 1024 * 1024, // no larger than 5mb
   },
   fileFilter: (req, file, cb) => {
-    if (!file.mimetype.startsWith("image")) {
+    if (!file || !file.mimetype || !file.mimetype.startsWith("image")) {
       return cb(new Error("File type not supported"), false);
     }
     cb(null, true);
@@ -28,9 +28,13 @@ router.get("/products", getUserProducts);
 
 router.put(
   "/product/:id",
+  upload.single("image"),
   body("name").isString().optional(),
   body("description").isString().optional(),
+  body("category").isString().optional(),
   body("price").isNumeric().optional(),
+  body("location").isString().optional(),
+  body("phoneNumber").isNumeric().optional(),
   handleInputErrors,
   updateProduct
 );
@@ -42,6 +46,9 @@ router.post(
   body("description").isString().optional(),
   body("category").exists().isString(),
   body("price").exists().isNumeric(),
+  body("location").exists().isString(),
+  body("email").exists().isEmail(),
+  body("phoneNumber").exists().isNumeric(),
   handleInputErrors,
   createProduct
 );
@@ -49,7 +56,7 @@ router.post(
 router.delete("/product/:id", deleteProduct);
 
 router.use((err, req, res, next) => {
-  return res.status(err.code || 500).json({ error: err.message });
+  return res.status(err.code || 500).json({ error: err });
 });
 
 export default router;
