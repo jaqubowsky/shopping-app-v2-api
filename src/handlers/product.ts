@@ -60,26 +60,29 @@ export const createProduct = async (req, res, next) => {
     const phoneNumber = Number(req.body.phoneNumber);
     const file = req.file;
 
-    let publicUrlPromise;
-    const filename = `${file.originalname}-${Date.now()}`;
-
+    let imageUrl = null;
     if (file) {
+      const filename = `${file.originalname}-${Date.now()}`;
+
       const blob = bucket.file(filename);
 
       const blobStream = blob.createWriteStream({
         resumable: false,
       });
 
-      publicUrlPromise = new Promise((resolve, reject) => {
+      imageUrl = new Promise((resolve, reject) => {
+        blobStream.on("error", (err) => {
+          reject(err);
+        });
+
         blobStream.on("finish", () => {
           const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
           resolve(publicUrl);
         });
+
         blobStream.end(file.buffer);
       });
     }
-
-    const publicUrl = await publicUrlPromise;
 
     const product = await prisma.product.create({
       data: {
@@ -90,7 +93,7 @@ export const createProduct = async (req, res, next) => {
         location,
         phoneNumber,
         email,
-        imageUrl: publicUrl,
+        imageUrl: await imageUrl,
         createdBy: req.user.username,
         createdAt: new Date(),
         belongsTo: {
@@ -111,7 +114,56 @@ export const createProduct = async (req, res, next) => {
 export const updateProduct = async (req, res, next) => {
   try {
     const id = req.params.id;
-    const { name, description, price, imageUrl } = req.body;
+    const { name, description, category, location } = req.body;
+    const price = Number(req.body.price);
+    const phoneNumber = Number(req.body.phoneNumber);
+    const file = req.file;
+
+    let imageUrl = null;
+
+    if (file) {
+      const filename = `${file.originalname}-${Date.now()}`;
+
+      const blob = bucket.file(filename);
+
+      const blobStream = blob.createWriteStream({
+        resumable: false,
+      });
+
+      imageUrl = new Promise((resolve, reject) => {
+        blobStream.on("error", (err) => {
+          reject(err);
+        });
+
+        blobStream.on("finish", () => {
+          const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
+          resolve(publicUrl);
+        });
+
+        blobStream.end(file.buffer);
+      });
+    }
+
+    const data: {
+      name: any;
+      category: any;
+      description: any;
+      price: number;
+      imageUrl?: string;
+      location: any;
+      phoneNumber: number;
+    } = {
+      name,
+      category,
+      description,
+      price,
+      location,
+      phoneNumber,
+    };
+
+    if (imageUrl) {
+      data.imageUrl = await imageUrl;
+    }
 
     const updated = await prisma.product.update({
       where: {
@@ -120,15 +172,10 @@ export const updateProduct = async (req, res, next) => {
           belongsToId: req.user.id,
         },
       },
-      data: {
-        name,
-        description,
-        price,
-        imageUrl,
-      },
+      data,
     });
 
-    res.json({ updated });
+    res.status(201).json({ updated });
   } catch (err) {
     next(err);
   }
@@ -152,9 +199,4 @@ export const deleteProduct = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-};
-
-export const uploadImage = async (req, res, next) => {
-  console.log(req.file);
-  res.status(200).json({ message: "File uploaded successfully" });
 };
