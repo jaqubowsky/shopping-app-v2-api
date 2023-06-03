@@ -113,7 +113,6 @@ export const createProduct = async (req, res, next) => {
 // Update a product
 export const updateProduct = async (req, res, next) => {
   try {
-    const id = req.params.id;
     const { name, description, category, location } = req.body;
     const price = Number(req.body.price);
     const phoneNumber = Number(req.body.phoneNumber);
@@ -121,8 +120,26 @@ export const updateProduct = async (req, res, next) => {
 
     let imageUrl = null;
 
+    const product = await prisma.product.findFirst({
+      where: {
+        name,
+        belongsToId: req.user.id,
+      },
+    });
+
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    // Delete the image from Google Cloud Storage
+    if (product.imageUrl) {
+      const filename = product.imageUrl.split("/").pop();
+      const fileToDelete = bucket.file(filename);
+      await fileToDelete.delete();
+    }
+
     if (file) {
-      const filename = `${file.originalname}-${Date.now()}`;
+      const filename = `${name}-${Date.now()}-${file.originalname}`;
 
       const blob = bucket.file(filename);
 
@@ -144,33 +161,30 @@ export const updateProduct = async (req, res, next) => {
       });
     }
 
-    const data: {
-      name: any;
-      category: any;
-      description: any;
-      price: number;
-      imageUrl?: string;
-      location: any;
-      phoneNumber: number;
-    } = {
-      name,
-      category,
-      description,
-      price,
-      location,
-      phoneNumber,
-    };
+  const data: {
+    name: any;
+    category: any;
+    description: any;
+    price: number;
+    imageUrl?: string;
+    location: any;
+    phoneNumber: number;
+  } = {
+    name,
+    category,
+    description,
+    price,
+    location,
+    phoneNumber,
+  };
 
-    if (imageUrl) {
-      data.imageUrl = await imageUrl;
-    }
+  if (imageUrl) {
+    data.imageUrl = await imageUrl;
+  }
 
     const updated = await prisma.product.update({
       where: {
-        id_belongsToId: {
-          id,
-          belongsToId: req.user.id,
-        },
+        id: product.id,
       },
       data,
     });
@@ -181,11 +195,32 @@ export const updateProduct = async (req, res, next) => {
   }
 };
 
-// Delete a product
 export const deleteProduct = async (req, res, next) => {
   try {
     const id = req.params.id;
 
+    // Get the product to be deleted
+    const product = await prisma.product.findFirst({
+      where: {
+        id,
+        belongsToId: req.user.id,
+      },
+    });
+
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    // Delete the image from Google Cloud Storage
+    if (product.imageUrl) {
+      const filename = product.imageUrl.split("/").pop();
+
+      const file = bucket.file(filename);
+
+      await file.delete();
+    }
+
+    // Delete the product from the database
     const deleted = await prisma.product.delete({
       where: {
         id_belongsToId: {
