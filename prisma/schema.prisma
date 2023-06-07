@@ -25,6 +25,7 @@ model User {
   password String
 
   products Product[]
+  cart     Cart?
 }
 
 model Product {
@@ -39,12 +40,34 @@ model Product {
   price       Int
   imageUrl    String
 
-  location    String  
-  phoneNumber Int 
-  email       String 
+  location    String
+  phoneNumber Int
+  email       String
 
   belongsToId String
-  belongsTo   User   @relation(fields: [belongsToId], references: [id])
+  belongsTo   User       @relation(fields: [belongsToId], references: [id])
+  CartItem    CartItem[]
 
   @@unique([id, belongsToId])
+}
+
+model Cart {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+
+  belongsToId String @unique
+  belongsTo   User   @relation(fields: [belongsToId], references: [id])
+
+  cartItems CartItem[]
+}
+
+model CartItem {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+
+  cartItemId String
+  cartItem   Product @relation(fields: [cartItemId], references: [id])
+
+  belongsToId String
+  belongsTo   Cart   @relation(fields: [belongsToId], references: [id])
 }
