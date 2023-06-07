@@ -19,7 +19,13 @@ export const createNewUser = async (req, res, next) => {
         username: req.body.username,
         email: req.body.email,
         password: await hashPassword(req.body.password),
+        cart: {
+          create: {},
+        }
       },
+      include: {
+        cart: true,
+      }
     });
 
     const token = createJWT(user);
