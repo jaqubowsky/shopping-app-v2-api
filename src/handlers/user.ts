@@ -78,9 +78,7 @@ export const signIn = async (req, res, next) => {
         imageUrl: user.imageUrl,
       });
   } catch (err) {
-    return res
-      .status(401)
-      .send({ message: "User with this email do not exist!" });
+    res.status(401).send({ message: "User with this email do not exist!" });
   }
 };
 
@@ -123,11 +121,11 @@ export const loggedIn = async (req, res, next) => {
 
     next();
   } catch (err) {
-    return res.status(401).send({ user: null, message: "Unexpected error" });
+    res.status(401).send({ user: null, message: "Unexpected error" });
   }
 };
 
-export const getUserById = async (req, res) => {
+export const getUserById = async (req, res, next) => {
   try {
     const prismaUser = await prisma.user.findUnique({
       where: {
@@ -147,7 +145,7 @@ export const getUserById = async (req, res) => {
       },
     });
   } catch (err) {
-    return res.status(404).json({ message: "User not found." });
+    res.status(404).json({ message: "User not found." });
   }
 };
 
@@ -187,8 +185,7 @@ export const deleteAccount = async (req, res, next) => {
 
     res.status(200).json({ message: "User deleted successfully." });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Error while deleting account." });
+    next(err)
   }
 };
 

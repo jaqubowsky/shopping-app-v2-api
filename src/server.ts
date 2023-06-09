@@ -41,7 +41,7 @@ app.get("/user/:id", getUserById);
 app.get("/product/:id", getProduct);
 
 app.use((err, req, res, next) => {
-  return res.status(err.code).json({ error: err });
+  return res.status(err.code || 500).json({ error: err.message });
 });
 
 export default app;

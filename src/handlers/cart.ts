@@ -67,7 +67,7 @@ export const addToCart = async (req, res, next) => {
   }
 };
 
-export const deleteFromCart = async (req, res) => {
+export const deleteFromCart = async (req, res, next) => {
   const { id } = req.params;
 
   try {
@@ -86,8 +86,7 @@ export const deleteFromCart = async (req, res) => {
     });
 
     return res.status(200).json({ message: "Cart item deleted successfully" });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: "Something went wrong" });
+  } catch (err) {
+    next(err);
   }
 };
