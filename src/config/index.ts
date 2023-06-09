@@ -15,6 +15,9 @@ const defaultConfig = {
   stage,
   dbUrl: process.env.DATABASE_URL,
   jwtSecret: process.env.JWT_SECRET,
+  gcloudProjectId: process.env.GCLOUD_PROJECT_ID,
+  gcloudApplicationCredentials: process.env.GCLOUD_APPLICATION_CREDENTIALS,
+  gcloudStorageBucket: process.env.GCLOUD_STORAGE_BUCKET,
   port: 3001,
   logging: false,
 };

@@ -7,10 +7,8 @@ import { protect } from "./modules/auth";
 import cookieParser from "cookie-parser";
 import {
   createNewUser,
-  deleteAccount,
   getUserById,
   loggedIn,
-  logout,
   signIn,
 } from "./handlers/user";
 import { getAllProducts, getProduct } from "./handlers/product";
