@@ -1,15 +1,14 @@
 {
   "compilerOptions": {
-    "moduleResolution": "nodenext",
-    "target": "ESNext",
-    "module": "ESNext",
+    "module": "commonjs",
+    "target": "ES2017",
     "sourceMap": true,
     "outDir": "./dist",
     "rootDir": "./src",
     "strict": false,
-    "lib": ["ESNext"],
+    "lib": ["ES2017"],
     "esModuleInterop": true,
     "declaration": true
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts"]
 }

@@ -1,7 +1,7 @@
 import * as dotenv from "dotenv";
-import config from "./config/index";
+import config from "./config";
 
-import app from "./server.js";
+import app from "./server";
 
 dotenv.config();
 
