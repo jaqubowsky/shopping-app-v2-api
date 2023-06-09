@@ -4,7 +4,7 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "strict": false,
-    "lib": ["ES2019"],
+    "lib": ["ES2022"],
     "esModuleInterop": true,
     "declaration": true
   },
