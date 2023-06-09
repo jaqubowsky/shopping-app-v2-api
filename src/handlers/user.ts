@@ -21,11 +21,11 @@ export const createNewUser = async (req, res, next) => {
         password: await hashPassword(req.body.password),
         cart: {
           create: {},
-        }
+        },
       },
       include: {
         cart: true,
-      }
+      },
     });
 
     const token = createJWT(user);
@@ -78,7 +78,9 @@ export const signIn = async (req, res, next) => {
         imageUrl: user.imageUrl,
       });
   } catch (err) {
-    return res.status(401).send({ message: "User with this email do not exist!" });
+    return res
+      .status(401)
+      .send({ message: "User with this email do not exist!" });
   }
 };
 
@@ -103,6 +105,7 @@ export const loggedIn = async (req, res, next) => {
 
       res.status(200).json({
         user: {
+          id: req.user.id,
           name: req.user.name,
           username: req.user.username,
           location: req.user.location,
@@ -145,6 +148,47 @@ export const getUserById = async (req, res) => {
     });
   } catch (err) {
     return res.status(404).json({ message: "User not found." });
+  }
+};
+
+export const deleteAccount = async (req, res, next) => {
+  try {
+    const userId = req.params.id;
+
+    // Delete cart items associated with the user
+    await prisma.cartItem.deleteMany({
+      where: {
+        belongsTo: {
+          belongsToId: userId,
+        },
+      },
+    });
+
+    // Delete cart associated with the user
+    await prisma.cart.deleteMany({
+      where: {
+        belongsToId: userId,
+      },
+    });
+
+    // Delete products associated with the user
+    await prisma.product.deleteMany({
+      where: {
+        belongsToId: userId,
+      },
+    });
+
+    // Delete the user
+    await prisma.user.delete({
+      where: {
+        id: userId,
+      },
+    });
+
+    res.status(200).json({ message: "User deleted successfully." });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Error while deleting account." });
   }
 };
 
