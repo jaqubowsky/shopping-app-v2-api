@@ -1,4 +1,4 @@
-import * as dotenv from "dotenv";
+const dotenv = require("dotenv");
 import config from "./config";
 
 import app from "./server";
