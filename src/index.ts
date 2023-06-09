@@ -1,5 +1,5 @@
 import * as dotenv from "dotenv";
-import config from "./config/index.js";
+import config from "./config/index";
 
 import app from "./server.js";
 

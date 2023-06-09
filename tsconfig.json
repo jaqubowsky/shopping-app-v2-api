@@ -1,17 +1,12 @@
 {
   "compilerOptions": {
-    "module": "esnext",
-    "baseUrl": "./",
-    "target": "esnext",
-    "moduleResolution": "nodenext",
     "sourceMap": true,
     "outDir": "./dist",
     "rootDir": "./src",
     "strict": false,
-    "lib": ["esnext"],
+    "lib": ["ES2015"],
     "esModuleInterop": true,
-    "declaration": true,
+    "declaration": true
   },
-
   "include": ["src/**/*.ts"]
 }

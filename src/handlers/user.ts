@@ -1,9 +1,9 @@
 import {
   PrismaClientKnownRequestError,
   PrismaClientValidationError,
-} from "@prisma/client/runtime/library.js";
-import prisma from "../db.js";
-import { comparePasswords, createJWT, hashPassword } from "../modules/auth.js";
+} from "@prisma/client/runtime/library";
+import prisma from "../db";
+import { comparePasswords, createJWT, hashPassword } from "../modules/auth";
 import jwt from "jsonwebtoken";
 
 export const createNewUser = async (req, res, next) => {
