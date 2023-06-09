@@ -18,7 +18,7 @@ const app = express();
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "https://boisterous-pastelito-fa5201.netlify.app/",
+    origin: "https://boisterous-pastelito-fa5201.netlify.app",
     credentials: true,
   })
 );
