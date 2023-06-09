@@ -1,7 +1,7 @@
-const dotenv = require("dotenv");
-import config from "./config";
+import * as dotenv from "dotenv";
+import config from "./config/index.js";
 
-import app from "./server";
+import app from "./server.js";
 
 dotenv.config();
 

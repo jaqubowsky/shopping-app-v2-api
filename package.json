@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Backend for shopping app",
   "main": "index.ts",
+  "type": "module",
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "start": "node dist/index.js",

@@ -1,15 +1,15 @@
 import { Router } from "express";
 import { body } from "express-validator";
-import { handleInputErrors } from "./middlewares/handleInputMiddleware";
+import { handleInputErrors } from "./middlewares/handleInputMiddleware.js";
 import {
   createProduct,
   deleteProduct,
   getUserProducts,
   updateProduct,
-} from "./handlers/product";
+} from "./handlers/product.js";
 import Multer from "multer";
-import { addToCart, deleteFromCart, getCartItems } from "./handlers/cart";
-import { deleteAccount, logout } from "./handlers/user";
+import { addToCart, deleteFromCart, getCartItems } from "./handlers/cart.js";
+import { deleteAccount, logout } from "./handlers/user.js";
 
 const upload = Multer({
   storage: Multer.memoryStorage(),

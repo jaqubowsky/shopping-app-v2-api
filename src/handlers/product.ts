@@ -1,4 +1,4 @@
-import prisma, { bucket } from "../db";
+import prisma, { bucket } from "../db.js";
 
 // Get all products from database
 export const getAllProducts = async (req, res, next) => {

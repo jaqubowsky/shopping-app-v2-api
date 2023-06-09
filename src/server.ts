@@ -1,17 +1,17 @@
 import express from "express";
 import morgan from "morgan";
-import router from "./router";
+import router from "./router.js";
 import helmet from "helmet";
 import cors from "cors";
-import { protect } from "./modules/auth";
+import { protect } from "./modules/auth.js";
 import cookieParser from "cookie-parser";
 import {
   createNewUser,
   getUserById,
   loggedIn,
   signIn,
-} from "./handlers/user";
-import { getAllProducts, getProduct } from "./handlers/product";
+} from "./handlers/user.js";
+import { getAllProducts, getProduct } from "./handlers/product.js";
 
 const app = express();
 
