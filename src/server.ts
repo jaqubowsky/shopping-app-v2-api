@@ -7,15 +7,13 @@ import { protect } from "./modules/auth";
 import cookieParser from "cookie-parser";
 import {
   createNewUser,
+  deleteAccount,
   getUserById,
   loggedIn,
   logout,
   signIn,
 } from "./handlers/user";
-import {
-  getAllProducts,
-  getProduct,
-} from "./handlers/product";
+import { getAllProducts, getProduct } from "./handlers/product";
 
 const app = express();
 
@@ -37,7 +35,6 @@ app.use("/api", protect, router);
 app.get("/allproducts", getAllProducts);
 app.post("/register", createNewUser);
 app.post("/login", signIn);
-app.get("/logout", logout);
 app.get("/logged-in", loggedIn);
 app.get("/user/:id", getUserById);
 
