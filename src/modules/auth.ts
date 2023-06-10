@@ -18,10 +18,16 @@ export const createJWT = (user) => {
 };
 
 export const protect = (req, res, next) => {
-  const token = req.cookies.token;
+  const authToken = req.headers.authorization;
+
+  if (!authToken) {
+    return res.status(401).send({ message: "Not authorized" });
+  }
+
+  const token = authToken.split(" ")[1];
 
   if (!token) {
-    return res.status(401).send({ message: "Not authorized" });
+    return res.status(401).send({ message: "Not valid token" });
   }
 
   try {
@@ -29,7 +35,6 @@ export const protect = (req, res, next) => {
     req.user = user;
     next();
   } catch (error) {
-    res.clearCookie("token");
-    return res.status(401).send({ message: "Not authorized" });
+    return res.status(401).send({ message: "Not valid token" });
   }
 };
