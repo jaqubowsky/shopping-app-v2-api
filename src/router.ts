@@ -26,8 +26,6 @@ const upload = Multer({
 
 const router = Router();
 
-router.get("/users/products", getUserProducts);
-
 router.put(
   "/api/products/:id",
   upload.single("image"),
@@ -40,7 +38,6 @@ router.put(
   handleInputErrors,
   updateProduct
 );
-
 router.post(
   "/api/products",
   upload.single("image"),
@@ -54,13 +51,13 @@ router.post(
   handleInputErrors,
   createProduct
 );
-
 router.delete("/api/products/:id", deleteProduct);
 
 router.get("/api/cart", getCartItems)
 router.post("/api/cart", addToCart);
 router.delete("/api/cart/:id", deleteFromCart)
 
+router.get("/api/users/products", getUserProducts);
 router.delete("/api/users/:id", deleteAccount)
 
 router.use((err, req, res, next) => {
