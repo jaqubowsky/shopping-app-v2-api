@@ -40,9 +40,7 @@ export const getCartItems = async (req, res, next) => {
 };
 
 export const addToCart = async (req, res, next) => {
-  try {
-    const { id } = req.params;
-
+  try {    
     const user = await prisma.user.findUnique({
       where: { id: req.user.id },
       include: { cart: true },
@@ -57,7 +55,7 @@ export const addToCart = async (req, res, next) => {
         },
         cartItem: {
           connect: {
-            id,
+            id: req.params.id,
           },
         },
       },
