@@ -55,7 +55,7 @@ export const getProduct = async (req, res, next) => {
 // Create a new product
 export const createProduct = async (req, res, next) => {
   try {
-    const { name, description, category, location, email } = req.body;
+    const { name, description, category, location, email, username } = req.body;
     const price = Number(req.body.price);
     const phoneNumber = Number(req.body.phoneNumber);
     const file = req.file;
@@ -94,7 +94,7 @@ export const createProduct = async (req, res, next) => {
         phoneNumber,
         email,
         imageUrl: await imageUrl,
-        createdBy: req.user.username,
+        createdBy: username,
         createdAt: new Date(),
         belongsTo: {
           connect: {
@@ -161,26 +161,26 @@ export const updateProduct = async (req, res, next) => {
       });
     }
 
-  const data: {
-    name: any;
-    category: any;
-    description: any;
-    price: number;
-    imageUrl?: string;
-    location: any;
-    phoneNumber: number;
-  } = {
-    name,
-    category,
-    description,
-    price,
-    location,
-    phoneNumber,
-  };
+    const data: {
+      name: any;
+      category: any;
+      description: any;
+      price: number;
+      imageUrl?: string;
+      location: any;
+      phoneNumber: number;
+    } = {
+      name,
+      category,
+      description,
+      price,
+      location,
+      phoneNumber,
+    };
 
-  if (imageUrl) {
-    data.imageUrl = await imageUrl;
-  }
+    if (imageUrl) {
+      data.imageUrl = await imageUrl;
+    }
 
     const updated = await prisma.product.update({
       where: {
