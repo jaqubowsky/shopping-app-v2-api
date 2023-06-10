@@ -19,7 +19,7 @@ app.set("trust proxy", 1);
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "https://boisterous-pastelito-fa5201.netlify.app",
+    origin: process.env.TRUST_ORIGIN,
     credentials: true,
   })
 );
