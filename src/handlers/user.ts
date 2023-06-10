@@ -30,10 +30,7 @@ export const createNewUser = async (req, res, next) => {
 
     const token = createJWT(user);
 
-    res
-      .cookie("token", token, { httpOnly: true, maxAge: 86400000 })
-      .status(200)
-      .json({ message: "User created successfully." });
+    res.status(200).json({ message: "User created successfully.", token });
   } catch (err) {
     if (err instanceof PrismaClientKnownRequestError) {
       if (err.code === "P2002") {
@@ -63,20 +60,14 @@ export const signIn = async (req, res, next) => {
       return res.status(401).json({ message: "Wrong email or password!" });
     }
 
-    const token = jwt.sign(
-      { id: user.id, username: user.username, email: user.email },
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" }
-    );
+    const token = createJWT(user);
 
-    res
-      .cookie("token", token, { httpOnly: true, maxAge: 86400000 })
-      .status(200)
-      .json({
-        username: user.username,
-        email: user.email,
-        imageUrl: user.imageUrl,
-      });
+    res.status(200).json({
+      username: user.username,
+      email: user.email,
+      imageUrl: user.imageUrl,
+      token,
+    });
   } catch (err) {
     res.status(401).send({ message: "User with this email do not exist!" });
   }
@@ -84,10 +75,20 @@ export const signIn = async (req, res, next) => {
 
 export const loggedIn = async (req, res, next) => {
   try {
-    const token = req.cookies.token;
+    const authToken = req.headers.authorization;
+
+    if (!authToken) {
+      return res
+        .status(200)
+        .send({ user: null, isLoggedIn: false, message: "Not authorized." });
+    }
+
+    const token = authToken.split(" ")[1];
 
     if (!token) {
-      return res.status(200).send({ user: null, message: "Not authorized." });
+      return res
+        .status(200)
+        .send({ user: null, isLoggedIn: false, message: "Not authorized." });
     }
 
     const user = jwt.verify(token, process.env.JWT_SECRET);
@@ -113,15 +114,18 @@ export const loggedIn = async (req, res, next) => {
           createdAt: req.user.createdAt,
           imageUrl: req.user.imageUrl,
         },
+        isLoggedIn: true,
         message: "Authorized.",
       });
     } else {
-      res.status(200).send({ user: null, message: "Not authorized." });
+      res
+        .status(200)
+        .send({ user: null, isLoggedIn: false, message: "Not authorized." });
     }
-
-    next();
   } catch (err) {
-    res.status(401).send({ user: null, message: "Unexpected error" });
+    res
+      .status(401)
+      .send({ user: null, isLoggedIn: false, message: "Unexpected error" });
   }
 };
 
@@ -184,17 +188,6 @@ export const deleteAccount = async (req, res, next) => {
     });
 
     res.status(200).json({ message: "User deleted successfully." });
-  } catch (err) {
-    next(err)
-  }
-};
-
-export const logout = async (req, res, next) => {
-  try {
-    res
-      .clearCookie("token")
-      .status(200)
-      .json({ message: "Logged out successfully." });
   } catch (err) {
     next(err);
   }
