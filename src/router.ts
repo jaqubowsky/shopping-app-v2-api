@@ -26,10 +26,10 @@ const upload = Multer({
 
 const router = Router();
 
-router.get("/products", getUserProducts);
+router.get("/user/products", getUserProducts);
 
 router.put(
-  "/product/:id",
+  "/api/products/:id",
   upload.single("image"),
   body("name").isString().optional(),
   body("description").isString().optional(),
@@ -42,7 +42,7 @@ router.put(
 );
 
 router.post(
-  "/product",
+  "/api/products",
   upload.single("image"),
   body("name").exists().isString(),
   body("description").isString().optional(),
@@ -55,13 +55,13 @@ router.post(
   createProduct
 );
 
-router.delete("/product/:id", deleteProduct);
+router.delete("/api/products/:id", deleteProduct);
 
-router.get("/cart", getCartItems)
-router.post("/cart", addToCart);
-router.delete("/cart/:id", deleteFromCart)
+router.get("/api/cart", getCartItems)
+router.post("/api/cart", addToCart);
+router.delete("/api/cart/:id", deleteFromCart)
 
-router.delete("/user/:id", deleteAccount)
+router.delete("/api/users/:id", deleteAccount)
 
 router.use((err, req, res, next) => {
   return res.status(err.code || 500).json({ error: err.message });

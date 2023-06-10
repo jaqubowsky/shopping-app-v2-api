@@ -29,15 +29,16 @@ app.disable("x-powered-by");
 app.use(helmet());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/api", protect, router);
+app.use("/protected", protect, router);
 
-app.get("/allproducts", getAllProducts);
-app.post("/register", createNewUser);
-app.post("/login", signIn);
-app.get("/logged-in", loggedIn);
-app.get("/user/:id", getUserById);
+app.get("/api/products/all", getAllProducts);
+app.get("/api/products/:id", getProduct);
 
-app.get("/product/:id", getProduct);
+// USERS ROUTES
+app.post("/api/users/register", createNewUser);
+app.post("/api/users/login", signIn);
+app.get("/api/users/logged-in", loggedIn);
+app.get("/api/users/:id", getUserById);
 
 app.use((err, req, res, next) => {
   return res.status(err.code || 500).json({ error: err.message });
