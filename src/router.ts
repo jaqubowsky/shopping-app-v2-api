@@ -9,7 +9,7 @@ import {
 } from "./handlers/product";
 import Multer from "multer";
 import { addToCart, deleteFromCart, getCartItems } from "./handlers/cart";
-import { deleteAccount, logout } from "./handlers/user";
+import { deleteAccount } from "./handlers/user";
 
 const upload = Multer({
   storage: Multer.memoryStorage(),
@@ -61,7 +61,6 @@ router.get("/cart", getCartItems)
 router.post("/cart", addToCart);
 router.delete("/cart/:id", deleteFromCart)
 
-router.get("/logout", logout);
 router.delete("/user/:id", deleteAccount)
 
 router.use((err, req, res, next) => {
