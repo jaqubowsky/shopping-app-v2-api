@@ -26,7 +26,7 @@ const upload = Multer({
 
 const router = Router();
 
-router.get("/user/products", getUserProducts);
+router.get("/users/products", getUserProducts);
 
 router.put(
   "/api/products/:id",
