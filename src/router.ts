@@ -54,7 +54,7 @@ router.post(
 router.delete("/api/products/:id", deleteProduct);
 
 router.get("/api/cart", getCartItems)
-router.post("/api/cart", addToCart);
+router.post("/api/cart/:id", addToCart);
 router.delete("/api/cart/:id", deleteFromCart)
 
 router.get("/api/users/products", getUserProducts);

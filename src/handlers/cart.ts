@@ -55,7 +55,7 @@ export const addToCart = async (req, res, next) => {
         },
         cartItem: {
           connect: {
-            id: req.body.productId,
+            id: req.params.id,
           },
         },
       },
