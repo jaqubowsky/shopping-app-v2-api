@@ -8,6 +8,12 @@ Backend part of a FakeStore App
 
 ## Endpoints
 
+### Docs
+
+| Description                 | URL                           |
+| --------------------------- | ----------------------------- |
+| See swagger docs            | /api-docs                     |
+
 ### Users
 
 | Description                 | Method | URL                           |
