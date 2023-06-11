@@ -14,7 +14,7 @@ Backend part of a FakeStore App
 | --------------------------- | ------ | ----------------------------- |
 | Register                    | POST   | /api/users/register           |
 | Login                       | POST   | /api/users/login              |
-| Check if user is logged in  | POST   | /api/users/logged-in          |
+| Check if user is logged in  | GET    | /api/users/logged-in          |
 | Get current user products   | GET    | /protected/api/users/products |
 | Get other user profile      | GET    | /api/users/:id                |
 | Delete profile              | DELETE | /protected/api/users/:id      |
@@ -27,7 +27,7 @@ Backend part of a FakeStore App
 | Update product   | PUT   | /protected/api/posts/feed   |
 | Get all products | GET   | /api/products/all           |
 | Get one product  | GET   | /protected/api/products/:id |
-| Unlike post      | PATCH | /api/posts/:id/unlike       |
+| 
 
 ### Cart
 
