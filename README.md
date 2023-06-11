@@ -27,7 +27,7 @@ Backend part of a FakeStore App
 | Update product   | PUT   | /protected/api/posts/feed   |
 | Get all products | GET   | /api/products/all           |
 | Get one product  | GET   | /protected/api/products/:id |
-| 
+
 
 ### Cart
 
