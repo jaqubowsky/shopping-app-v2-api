@@ -52,6 +52,8 @@ Backend part of a FakeStore App
 - [PostgreSQL](https://www.postgresql.org)
 - [Prisma](https://www.prisma.io)
 - [JWT](https://jwt.io/)
+- [SwaggerUI](https://swagger.io)
+- [OpenAPI](https://www.openapis.org)
 - [Google Cloud Storage](https://www.npmjs.com/package/@google-cloud/storage?activeTab=readme)
 
 ## Getting started
