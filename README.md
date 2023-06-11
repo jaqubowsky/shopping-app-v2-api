@@ -21,12 +21,13 @@ Backend part of a FakeStore App
 
 ### Products
 
-| Description       | Method | URL                       |
-| ----------------- | ------ | --------------------------|
-| Create product   | POST  | /protected/api/products     |
-| Update product   | PUT   | /protected/api/posts/feed   |
-| Get all products | GET   | /api/products/all           |
-| Get one product  | GET   | /protected/api/products/:id |
+| Description       | Method | URL                        |
+| ---------------- | ------ | --------------------------  |
+| Create product   | POST   | /protected/api/products     |
+| Update product   | PUT    | /protected/api/posts/feed   |
+| Get all products | GET    | /api/products/all           |
+| Get one product  | GET    | /protected/api/products/:id |
+| Delete product   | DELETE | /protected/api/products/:id |
 
 
 ### Cart
