@@ -1,7 +1,7 @@
 import {
   PrismaClientKnownRequestError,
   PrismaClientValidationError,
-} from "@prisma/client/runtime/library.js";
+} from "@prisma/client/runtime/library";
 import prisma from "../db";
 import { comparePasswords, createJWT, hashPassword } from "../modules/auth";
 import jwt from "jsonwebtoken";

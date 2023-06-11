@@ -38,6 +38,7 @@ router.put(
   handleInputErrors,
   updateProduct
 );
+
 router.post(
   "/api/products",
   upload.single("image"),

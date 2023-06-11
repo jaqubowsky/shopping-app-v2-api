@@ -5,13 +5,10 @@ import helmet from "helmet";
 import cors from "cors";
 import { protect } from "./modules/auth";
 import cookieParser from "cookie-parser";
-import {
-  createNewUser,
-  getUserById,
-  loggedIn,
-  signIn,
-} from "./handlers/user.js";
+import { createNewUser, getUserById, loggedIn, signIn } from "./handlers/user";
 import { getAllProducts, getProduct } from "./handlers/product";
+import swaggerUi from "swagger-ui-express";
+import swaggerDocument from "./api-docs/api.json";
 
 const app = express();
 
@@ -19,7 +16,7 @@ app.set("trust proxy", 1);
 app.use(cookieParser());
 app.use(
   cors({
-    origin: process.env.TRUST_ORIGIN,
+    origin: [process.env.TRUST_ORIGIN, "http://localhost:3001"],
     credentials: true,
   })
 );
@@ -28,6 +25,7 @@ app.use(express.json());
 app.disable("x-powered-by");
 app.use(helmet());
 app.use(express.urlencoded({ extended: true }));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use("/protected", protect, router);
 
